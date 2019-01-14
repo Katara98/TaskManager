@@ -1,4 +1,4 @@
-package ua.edu.sumdu.j2se.volyk.tasks;
+package ua.edu.sumdu.j2se.volyk.tasks.models;
 
 import java.io.Serializable;
 import java.util.Date;

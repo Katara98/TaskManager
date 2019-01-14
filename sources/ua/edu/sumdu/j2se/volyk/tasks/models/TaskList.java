@@ -1,4 +1,4 @@
-package ua.edu.sumdu.j2se.volyk.tasks;
+package ua.edu.sumdu.j2se.volyk.tasks.models;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -43,7 +43,7 @@ public abstract class TaskList implements Cloneable, Iterable<Task>, Serializabl
      * @param index index of the element to return
 	 * @return the task at the specified position in this list
 	 */
-    //public abstract Task getTask(int index);
+    public abstract Task getTask(int index);
 
     /**
      * Returns array of tasks from the list, the notification time of which is 
@@ -52,7 +52,7 @@ public abstract class TaskList implements Cloneable, Iterable<Task>, Serializabl
      * @param to end time of the interval in which it is needed to find tasks with notification
      * @return Returns array of tasks from the list in specified interval
      */
-    /*public TaskList incoming(Date from, Date to) {
+    public TaskList incoming(Date from, Date to) {
         Date minDate = new Date(0);
 		if (from.before(minDate) || to.before(minDate)) {
 			throw new IllegalArgumentException("Entered values: from=" + from + ", to=" + to + " - not valid. Have to be >= 0.");
@@ -68,7 +68,7 @@ public abstract class TaskList implements Cloneable, Iterable<Task>, Serializabl
 			}
 			return incomingTasks;
 		}
-    }*/
+    }
     
     protected abstract TaskList createInstance();
     

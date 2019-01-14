@@ -1,4 +1,4 @@
-package ua.edu.sumdu.j2se.volyk.tasks;
+package ua.edu.sumdu.j2se.volyk.tasks.models;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -133,11 +133,11 @@ public class LinkedTaskList extends TaskList {
      * {@inheritDoc} 
      */
     public Iterator<Task> iterator() {
-        return new Iterator<Task>() {
+        return new Iterator<>() {
             private ListItem prevItem = null;
             private ListItem currentItem = null;
             private ListItem nextItem = head;
-            
+
             public boolean hasNext() {
                 return nextItem != null;
             }
@@ -151,7 +151,7 @@ public class LinkedTaskList extends TaskList {
                 nextItem = currentItem.getNext();
                 return currentItem.getTask();
             }
-            
+
             public void remove() {
                 if (currentItem == null) {
                     throw new IllegalStateException("Can't remove.");

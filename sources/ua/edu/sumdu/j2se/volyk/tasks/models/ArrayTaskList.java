@@ -1,4 +1,4 @@
-package ua.edu.sumdu.j2se.volyk.tasks;
+package ua.edu.sumdu.j2se.volyk.tasks.models;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -83,9 +83,9 @@ public class ArrayTaskList extends TaskList {
      * {@inheritDoc} 
      */
     public Iterator<Task> iterator() {
-        return new Iterator<Task>() {
+        return new Iterator<>() {
             private int currentIndex = -1;
-            
+
             public boolean hasNext() {
                 return currentIndex < size() - 1;
             }
@@ -96,19 +96,19 @@ public class ArrayTaskList extends TaskList {
                 }
                 throw new NoSuchElementException("No more elements in the list.");
             }
-            
+
             public void remove() {
                 if (currentIndex < 0) {
                     throw new IllegalStateException("Can't remove.");
                 } else {
                     for (int j = currentIndex; j < size() - 1; j++) {
-                            list[j] = list[j + 1];
+                        list[j] = list[j + 1];
                     }
                     currentIndex--;
                     list[--size] = null;
                 }
             }
-            
+
         };
     }
     
