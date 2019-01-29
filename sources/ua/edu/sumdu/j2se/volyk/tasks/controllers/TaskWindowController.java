@@ -1,5 +1,6 @@
 package ua.edu.sumdu.j2se.volyk.tasks.controllers;
 
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -21,6 +22,8 @@ public class TaskWindowController extends Controller {
     private Task task;
     private boolean okClicked = false;
     private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    private final String unrepeatableStr = "Unrepeatable";
+    private final String repeatableStr = "Repeatable";
 
     public boolean isOkClicked() {
         return okClicked;
@@ -69,14 +72,13 @@ public class TaskWindowController extends Controller {
     private TextField startTimeField;
 
     public void initialize() {
-        taskTypeComboBox.getItems().addAll("Unrepeatable", "Repeatable");
-
+        taskTypeComboBox.getItems().addAll(unrepeatableStr, repeatableStr);
     }
 
     @FXML
     void changeTaskFields() {
         String selected = taskTypeComboBox.getSelectionModel().getSelectedItem();
-        if (selected.equals("Unrepeatable")) {
+        if (selected.equals(unrepeatableStr)) {
             repeatableTaskFields.setVisible(false);
             startTimeLabel.setText("Time");
         } else {
@@ -100,7 +102,7 @@ public class TaskWindowController extends Controller {
         } else if (isValidData()) {
             try {
                 Date startDate = dateFormat.parse(startTimeField.getText());
-                if (taskTypeComboBox.getSelectionModel().getSelectedItem().equals("Repeatable")) {
+                if (taskTypeComboBox.getSelectionModel().getSelectedItem().equals(repeatableStr)) {
                     Date endDate = dateFormat.parse(endTimeField.getText());
                     int interval = Integer.parseInt(repeatIntervalField.getText());
                     task = new Task(title, startDate, endDate, interval);
@@ -114,26 +116,30 @@ public class TaskWindowController extends Controller {
                 okClicked = false;
             }
         } else {
+            showWarningWindow("Invalid values in fields", "Title can't be empty.\nFormat for date input: yyyy-MM-dd HH:mm:ss.\nRepeat interval must be integer and >=0");
             okClicked = false;
         }
     }
 
-    void customizeView() {
+    public void customizeView() {
         if (type != WindowType.add) {
             taskTitleField.setText(task.getTitle());
             activeCheckBox.setSelected(task.isActive());
             startTimeField.setText(dateFormat.format(task.getTime()));
             if (task.isRepeated()) {
-                taskTypeComboBox.getSelectionModel().select("Repeatable");
+                taskTypeComboBox.getSelectionModel().select(repeatableStr);
                 endTimeField.setText(dateFormat.format(task.getEndTime()));
                 repeatIntervalField.setText(Integer.toString(task.getRepeatInterval()));
             } else {
-                taskTypeComboBox.getSelectionModel().select("Unrepeatable");
+                taskTypeComboBox.getSelectionModel().select(unrepeatableStr);
             }
             changeTaskFields();
             if (type == WindowType.view) {
                 ObservableList<Node> list = window.getStage().getScene().getRoot().getChildrenUnmodifiable();
-                for (Node n : list) {
+                ObservableList<Node> list2 = repeatableTaskFields.getChildrenUnmodifiable();
+                list2.addAll(list);
+                ObservableList<Node> list3 = FXCollections.concat(list, list2);
+                for (Node n : list3) {
                     if (n instanceof TextField) {
                         ((TextField)n).setEditable(false);
                         n.setFocusTraversable(false);
@@ -146,7 +152,7 @@ public class TaskWindowController extends Controller {
                 okButton.setText("Save changes");
             }
         } else {
-            taskTypeComboBox.getSelectionModel().select("Unrepeatable");
+            taskTypeComboBox.getSelectionModel().select(unrepeatableStr);
             changeTaskFields();
             startTimeField.setText(dateFormat.format(new Date()));
             okButton.setText("Add task");
@@ -155,11 +161,11 @@ public class TaskWindowController extends Controller {
 
     private boolean isValidData() {
         try {
-            if (taskTypeComboBox.getSelectionModel().getSelectedItem() == null) {
+            if (taskTypeComboBox.getSelectionModel().getSelectedItem() == null || taskTitleField.getText().isEmpty()) {
                 return false;
             }
             dateFormat.parse(startTimeField.getText());
-            if (taskTypeComboBox.getSelectionModel().getSelectedItem().equals("Repeatable")) {
+            if (taskTypeComboBox.getSelectionModel().getSelectedItem().equals(repeatableStr)) {
                 dateFormat.parse(endTimeField.getText());
                 Integer.parseInt(repeatIntervalField.getText());
             }

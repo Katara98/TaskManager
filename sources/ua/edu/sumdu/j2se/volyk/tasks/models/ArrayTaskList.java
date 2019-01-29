@@ -9,7 +9,7 @@ import java.util.NoSuchElementException;
 public class ArrayTaskList extends TaskList {
     private static final int INIT_SIZE = 20;
     private static final int EXTEND = 15;
-    public Task[] list; 
+    private Task[] list;
 
     /**
 	 * Constructs an empty ArrayTaskList with an initial capacity.
@@ -21,7 +21,7 @@ public class ArrayTaskList extends TaskList {
     /**
      * {@inheritDoc} 
      */
-    public void add(Task task) {
+    public boolean add(Task task) {
         if (task != null) {
             if (size() == list.length) {
                 resize(size() + EXTEND);
@@ -30,6 +30,7 @@ public class ArrayTaskList extends TaskList {
         } else {
             throw new IllegalArgumentException("Can't add null task.");
         }
+        return false;
     }
 
     private void resize(int newSize) {
@@ -83,7 +84,7 @@ public class ArrayTaskList extends TaskList {
      * {@inheritDoc} 
      */
     public Iterator<Task> iterator() {
-        return new Iterator<>() {
+        return new Iterator<Task>() {
             private int currentIndex = -1;
 
             public boolean hasNext() {

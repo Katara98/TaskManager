@@ -3,6 +3,9 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TableColumn?>
@@ -11,15 +14,15 @@
 <?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="400.0" prefWidth="800.0" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ua.edu.sumdu.j2se.volyk.tasks.controllers.MainWindowController">
+<AnchorPane minHeight="400.0" minWidth="800.0" prefHeight="400.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ua.edu.sumdu.j2se.volyk.tasks.controllers.MainWindowController">
    <children>
-      <TabPane prefHeight="400.0" prefWidth="800.0" tabClosingPolicy="UNAVAILABLE">
+      <TabPane layoutY="31.0" prefHeight="369.0" prefWidth="800.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="31.0">
         <tabs>
           <Tab text="Tasklist">
             <content>
-              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="230.0" prefWidth="393.0">
+              <AnchorPane minHeight="0.0" minWidth="0.0">
                      <children>
-                        <ToolBar prefHeight="46.0" prefWidth="800.0">
+                        <ToolBar fx:id="tasksToolbar" prefHeight="46.0" prefWidth="800.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
                           <items>
                             <Button fx:id="addButton" mnemonicParsing="false" onAction="#addTask" text="Add task" />
                               <Button fx:id="viewButton" mnemonicParsing="false" onAction="#viewTask" text="View task" />
@@ -27,19 +30,19 @@
                               <Button fx:id="deleteButton" mnemonicParsing="false" onAction="#deleteTask" text="Delete task" />
                           </items>
                         </ToolBar>
-                        <ListView fx:id="taskList" layoutX="14.0" layoutY="45.0" prefHeight="308.0" prefWidth="580.0" AnchorPane.bottomAnchor="8.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="45.0" />
+                        <ListView fx:id="taskList" layoutX="14.0" layoutY="45.0" AnchorPane.bottomAnchor="8.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="45.0" />
                      </children>
                   </AnchorPane>
             </content>
           </Tab>
           <Tab text="Calendar">
                <content>
-                  <AnchorPane prefWidth="600.0">
+                  <AnchorPane prefHeight="186.0" prefWidth="800.0">
                      <children>
                         <Label layoutX="14.0" layoutY="14.0" text="From:" />
                         <Label layoutX="305.0" layoutY="14.0" text="To:" />
                         <Button fx:id="showCalendarButton" layoutX="580.0" layoutY="10.0" mnemonicParsing="false" onAction="#showCalendar" text="Show calendar" />
-                        <TableView fx:id="calendarTable" layoutX="14.0" layoutY="47.0" prefHeight="304.0" prefWidth="575.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0">
+                        <TableView fx:id="calendarTable" layoutX="14.0" layoutY="47.0" prefHeight="270.0" prefWidth="780.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="55.0">
                           <columns>
                             <TableColumn fx:id="dateColumn" prefWidth="167.99996948242188" resizable="false" text="Date" />
                             <TableColumn fx:id="taskTitleColumn" prefWidth="611.2000122070312" resizable="false" text="Title" />
@@ -53,5 +56,23 @@
           </Tab>
         </tabs>
       </TabPane>
+      <MenuBar prefHeight="21.0" prefWidth="800.0">
+        <menus>
+          <Menu mnemonicParsing="false" text="Menu">
+            <items>
+                  <Menu mnemonicParsing="false" text="Load list">
+                    <items>
+                      <MenuItem fx:id="newListButton" mnemonicParsing="false" onAction="#loadNewList" text="New list" />
+                        <MenuItem fx:id="fromFileButton" mnemonicParsing="false" onAction="#loadListFromFile" text="From file..." />
+                        <MenuItem fx:id="fromPrevSessionButton" mnemonicParsing="false" onAction="#loadFromPrev" text="From previous session" />
+                    </items>
+                  </Menu>
+                  <MenuItem fx:id="saveButton" mnemonicParsing="false" onAction="#saveList" text="Save list" />
+                  <MenuItem fx:id="saveAsButton" mnemonicParsing="false" onAction="#saveListAs" text="Save list as..." />
+              <MenuItem fx:id="closeButton" mnemonicParsing="false" onAction="#exit" text="Close" />
+            </items>
+          </Menu>
+        </menus>
+      </MenuBar>
    </children>
 </AnchorPane>

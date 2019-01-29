@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+Created-By: Volyk Nadya
+Main-Class: ua.edu.sumdu.j2se.volyk.tasks.Main
+Class-Path: libs/log4j-1.2.17.jar

@@ -1,8 +1,7 @@
 package ua.edu.sumdu.j2se.volyk.tasks.models;
 
 import java.io.Serializable;
-import java.util.Date;
-import java.util.Iterator;
+import java.util.*;
 
 /**
  * The TaskList class represents an ordered collection of tasks. 
@@ -11,7 +10,7 @@ import java.util.Iterator;
  * this class and provide implementations for the getTask(int),  
  * add(Task) and remove(Task) methods.
  */
-public abstract class TaskList implements Cloneable, Iterable<Task>, Serializable {
+public abstract class TaskList extends AbstractCollection<Task> implements Cloneable, Iterable<Task>, Serializable{
     /**
      * Count of elements of the list.
      */
@@ -21,7 +20,7 @@ public abstract class TaskList implements Cloneable, Iterable<Task>, Serializabl
      * Appends the specified task to the end of this list.
      * @param task task to be appended to this list
      */
-    public abstract void add(Task task);
+    public abstract boolean add(Task task);
     
     /**
 	 * Removes the specified task from this list.

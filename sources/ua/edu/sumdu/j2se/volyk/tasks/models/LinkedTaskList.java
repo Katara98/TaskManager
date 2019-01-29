@@ -57,12 +57,12 @@ public class LinkedTaskList extends TaskList {
     /**
      * {@inheritDoc} 
      */
-    public void add(Task task) {
+    public boolean add(Task task) {
         if (task != null) {
             if (head == null) { 
                 head = new ListItem(task); 
                 size++;
-                return; 
+                return false;
             } 
 			ListItem currentItem = head;
             while (currentItem.getNext() != null) {
@@ -73,6 +73,7 @@ public class LinkedTaskList extends TaskList {
         } else {
             throw new IllegalArgumentException("Can't add null task.");
         }
+        return false;
     }
 
     /**
@@ -133,7 +134,7 @@ public class LinkedTaskList extends TaskList {
      * {@inheritDoc} 
      */
     public Iterator<Task> iterator() {
-        return new Iterator<>() {
+        return new Iterator<Task>() {
             private ListItem prevItem = null;
             private ListItem currentItem = null;
             private ListItem nextItem = head;

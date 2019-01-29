@@ -19,16 +19,8 @@ public class Window {
         return stage;
     }
 
-    public void setStage(Stage stage) {
-        this.stage = stage;
-    }
-
     public Controller getController() {
         return controller;
-    }
-
-    public void setController(MainWindowController controller) {
-        this.controller = controller;
     }
 
     public Window(Stage stage, String file, String title) throws IOException {
