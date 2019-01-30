@@ -16,7 +16,7 @@ public class TaskIO {
 
     private static SimpleDateFormat dateFormat = new SimpleDateFormat("[yyyy-MM-dd HH:mm:ss.SSS]");
 
-    public static void write(TaskList tasks, OutputStream out) {
+    public static void write(TaskList tasks, OutputStream out) throws IOException {
         try (DataOutputStream stream = new DataOutputStream(out)) {
             stream.write(tasks.size());
             for (Task t : tasks) {
@@ -31,12 +31,10 @@ public class TaskIO {
                     stream.writeLong(t.getTime().getTime());
                 }
             }
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 
-    public static void read(TaskList tasks, InputStream in) {
+    public static void read(TaskList tasks, InputStream in) throws IOException {
         try (DataInputStream stream = new DataInputStream(in)) {
             int size = stream.read();
             for (int i = 0; i < size; i++) {
@@ -59,32 +57,22 @@ public class TaskIO {
                 task.setActive(isActive);
                 tasks.add(task);
             }
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 
-    public static void writeBinary(TaskList tasks, File file) {
+    public static void writeBinary(TaskList tasks, File file) throws IOException {
         try (DataOutputStream stream = new DataOutputStream(new FileOutputStream(file))) {
             write(tasks, stream);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 
-    public static void readBinary(TaskList tasks, File file) {
+    public static void readBinary(TaskList tasks, File file) throws IOException {
         try (DataInputStream stream = new DataInputStream(new FileInputStream(file))) {
             read(tasks, stream);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 
-    public static void write(TaskList tasks, Writer out) {
+    public static void write(TaskList tasks, Writer out) throws IOException {
         try (BufferedWriter bf = new BufferedWriter(out)) {
             int i = 0;
             for (Task t : tasks) {
@@ -95,12 +83,10 @@ public class TaskIO {
                 }
                 i++;
             }
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 
-    public static void read(TaskList tasks, Reader in) {
+    public static void read(TaskList tasks, Reader in) throws IOException, ParseException {
         try (BufferedReader bf = new BufferedReader(in)) {
             String line;
             while ((line = bf.readLine()) != null) {
@@ -131,30 +117,18 @@ public class TaskIO {
                 task.setActive(isActive);
                 tasks.add(task);
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ParseException e) {
-            e.printStackTrace();
         }
     }
 
-    public static void writeText(TaskList tasks, File file) {
+    public static void writeText(TaskList tasks, File file) throws IOException {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
             write(tasks, writer);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 
-    public static void readText(TaskList tasks, File file) {
+    public static void readText(TaskList tasks, File file) throws IOException, ParseException {
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             read(tasks, reader);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 

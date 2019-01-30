@@ -31,7 +31,7 @@ public class MainWindowController extends Controller {
     private ObservableList<Task> tasks;
     private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     private File lastFile;
-    private boolean isSavedFile;
+    private boolean isSavedFile = true;
     private boolean isButtonsDisabled = true;
     private String recentFileName = System.getProperty("user.dir") + "\\recentFile.txt";
 
@@ -65,7 +65,7 @@ public class MainWindowController extends Controller {
             this.set = set;
         }
 
-        Item (Date date, Set<Task> set) {
+        Item(Date date, Set<Task> set) {
             this.date = dateFormat.format(date);
             this.set = setToString(set);
         }
@@ -75,7 +75,7 @@ public class MainWindowController extends Controller {
             int i = 0;
             for (Task task : set) {
                 result.append(task.getTitle());
-                if (i == set.size()-1) {
+                if (i == set.size() - 1) {
                     break;
                 }
                 result.append(", ");
@@ -101,7 +101,7 @@ public class MainWindowController extends Controller {
     private TextField fromDateField;
 
     @FXML
-    private TextField  toDateField;
+    private TextField toDateField;
 
     @FXML
     private TableView<Item> calendarTable;
@@ -118,10 +118,33 @@ public class MainWindowController extends Controller {
     @FXML
     private MenuItem saveAsButton;
 
+    @FXML
+    private MenuItem fromPrevSessionButton;
+
     public void initialize() {
         dateColumn.setCellValueFactory(new PropertyValueFactory<Item, String>("date"));
         taskTitleColumn.setCellValueFactory(new PropertyValueFactory<Item, String>("set"));
         setTaskAndSaveButtonsDisabled(true);
+        try (BufferedReader reader = new BufferedReader(new FileReader(recentFileName))) {
+            String fileName = reader.readLine();
+            if (fileName == null) {
+                fromPrevSessionButton.setDisable(true);
+            }
+        } catch (FileNotFoundException e) {
+            fromPrevSessionButton.setDisable(true);
+            File file = new File(recentFileName);
+            try {
+                if (file.createNewFile()) {
+                    log.info("File \"" + recentFileName + "\" was created.");
+                }
+            } catch (IOException e1) {
+                log.error("IOException happened!", e1);
+                showErrorWindow("IOException happened!");
+            }
+        } catch (IOException e) {
+            log.error("IOException happened!", e);
+            showErrorWindow("IOException happened!");
+        }
     }
 
     private void setTaskAndSaveButtonsDisabled(boolean disabled) {
@@ -186,7 +209,7 @@ public class MainWindowController extends Controller {
     @FXML
     void deleteTask(ActionEvent event) {
         int selectedIndex = taskList.getSelectionModel().getSelectedIndex();
-        if (selectedIndex>=0) {
+        if (selectedIndex >= 0) {
             log.info("Delete selected task: " + taskList.getSelectionModel().getSelectedItem());
             if (showConfirmationWindow("Are you sure to delete this task?", taskList.getSelectionModel().getSelectedItem().toString())) {
                 tasks.remove(selectedIndex);
@@ -218,7 +241,7 @@ public class MainWindowController extends Controller {
             Date fromDate = dateFormat.parse(fromDateField.getText());
             Date toDate = dateFormat.parse(toDateField.getText());
             SortedMap<Date, Set<Task>> map = Tasks.calendar(tasks, fromDate, toDate);
-            calendarItems  = FXCollections.observableArrayList();
+            calendarItems = FXCollections.observableArrayList();
             for (Map.Entry<Date, Set<Task>> entry : map.entrySet()) {
                 calendarItems.add(new Item(entry.getKey(), entry.getValue()));
             }
@@ -260,18 +283,12 @@ public class MainWindowController extends Controller {
             saveList();
         }
         if (lastFile != null) {
-
-            /*System.out.println(getClass().getResource(recentFileName));
-
-            try (BufferedWriter writer = new BufferedWriter(new FileWriter(new File(getClass().getResource(recentFileName).getFile())))) {
-                writer.write(lastFile.getAbsolutePath());
-            }  catch (IOException e) {
-                e.printStackTrace();
-            }*/
+            log.info("Remembering last file.");
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(new File(recentFileName)))) {
                 writer.write(lastFile.getAbsolutePath());
-            }  catch (IOException e) {
-                e.printStackTrace();
+            } catch (IOException e) {
+                log.error("IOException happened!", e);
+                showErrorWindow("IOException happened!");
             }
         }
 
@@ -287,35 +304,48 @@ public class MainWindowController extends Controller {
         }
         FileChooser fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Text files", "*.txt"));
-        lastFile =  fileChooser.showOpenDialog(getWindow().getStage());
+        lastFile = fileChooser.showOpenDialog(getWindow().getStage());
         loadFromFile();
     }
 
     private void loadFromFile() {
         list = new ArrayTaskList();
         if (lastFile != null) {
-            TaskIO.readText(list, lastFile);
+            try {
+                TaskIO.readText(list, lastFile);
+                initList();
+                isSavedFile = true;
+                log.info("List is loaded from file: " + lastFile.getPath());
+            } catch (IOException e) {
+                log.error("IOException happened!", e);
+                showErrorWindow("IOException happened!");
+            } catch (ParseException e) {
+                log.error("The data in the file is not in the appropriate format.");
+                showErrorWindow("The data in the file is not in the appropriate format.");
+            }
         }
-        initList();
-        isSavedFile = true;
     }
 
     @FXML
     void loadFromPrev(ActionEvent event) {
-        /*try (BufferedReader reader = new BufferedReader(new FileReader(new File(getClass().getResource(recentFileName).getFile())))) {
-            String fileName = reader.readLine();
-            lastFile = new File(fileName);
-        }  catch (IOException e) {
-            e.printStackTrace();
-        }*/
         try (BufferedReader reader = new BufferedReader(new FileReader(recentFileName))) {
             String fileName = reader.readLine();
-            lastFile = new File(fileName);
-        }  catch (IOException e) {
-            e.printStackTrace();
+            if (fileName != null) {
+                lastFile = new File(fileName);
+                if (lastFile.isFile()) {
+                    loadFromFile();
+                } else {
+                    showErrorWindow("File not found!");
+                    try (BufferedWriter writer = new BufferedWriter(new FileWriter(recentFileName))) {
+                        writer.flush();
+                    }
+                    fromPrevSessionButton.setDisable(true);
+                }
+            }
+        } catch (IOException e) {
+            log.error("IOException happened!", e);
+            showErrorWindow("IOException happened!");
         }
-
-        loadFromFile();
     }
 
     @FXML
@@ -327,6 +357,7 @@ public class MainWindowController extends Controller {
         }
         list = new ArrayTaskList();
         initList();
+        log.info("New list is loaded.");
     }
 
     private void initList() {
@@ -339,12 +370,11 @@ public class MainWindowController extends Controller {
 
     @FXML
     void saveList() {
-        if (lastFile != null) {
-            TaskIO.writeText(list, lastFile);
-        } else {
+        if (lastFile == null) {
             saveListAs();
+        } else {
+            saveToFile();
         }
-        isSavedFile = true;
     }
 
     @FXML
@@ -352,9 +382,19 @@ public class MainWindowController extends Controller {
         FileChooser fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Text files", "*.txt"));
         lastFile = fileChooser.showSaveDialog(getWindow().getStage());
+        saveToFile();
+    }
+
+    private void saveToFile() {
         if (lastFile != null) {
-            TaskIO.writeText(list, lastFile);
+            try {
+                TaskIO.writeText(list, lastFile);
+                isSavedFile = true;
+                log.info("List is saved in file: " + lastFile.getPath());
+            } catch (IOException e) {
+                log.error("IOException happened!", e);
+                showErrorWindow("IOException happened!");
+            }
         }
-        isSavedFile = true;
     }
 }

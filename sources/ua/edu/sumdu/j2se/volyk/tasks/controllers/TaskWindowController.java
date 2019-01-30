@@ -114,9 +114,12 @@ public class TaskWindowController extends Controller {
                 this.getWindow().getStage().close();
             } catch (ParseException e) {
                 okClicked = false;
+            } catch (IllegalArgumentException e) {
+                showWarningWindow("Invalid values in fields", e.getMessage());
+                okClicked = false;
             }
         } else {
-            showWarningWindow("Invalid values in fields", "Title can't be empty.\nFormat for date input: yyyy-MM-dd HH:mm:ss.\nRepeat interval must be integer and >=0");
+            showWarningWindow("Invalid values in fields", "Format for date input: yyyy-MM-dd HH:mm:ss.\nRepeat interval must be integer and >=0");
             okClicked = false;
         }
     }
@@ -137,7 +140,6 @@ public class TaskWindowController extends Controller {
             if (type == WindowType.view) {
                 ObservableList<Node> list = window.getStage().getScene().getRoot().getChildrenUnmodifiable();
                 ObservableList<Node> list2 = repeatableTaskFields.getChildrenUnmodifiable();
-                list2.addAll(list);
                 ObservableList<Node> list3 = FXCollections.concat(list, list2);
                 for (Node n : list3) {
                     if (n instanceof TextField) {
@@ -161,7 +163,7 @@ public class TaskWindowController extends Controller {
 
     private boolean isValidData() {
         try {
-            if (taskTypeComboBox.getSelectionModel().getSelectedItem() == null || taskTitleField.getText().isEmpty()) {
+            if (taskTypeComboBox.getSelectionModel().getSelectedItem() == null) {
                 return false;
             }
             dateFormat.parse(startTimeField.getText());

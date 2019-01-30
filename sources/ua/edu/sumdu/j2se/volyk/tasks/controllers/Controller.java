@@ -2,14 +2,11 @@ package ua.edu.sumdu.j2se.volyk.tasks.controllers;
 
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
-import ua.edu.sumdu.j2se.volyk.tasks.views.ConfirmationWindow;
-import ua.edu.sumdu.j2se.volyk.tasks.views.InfoWindow;
-import ua.edu.sumdu.j2se.volyk.tasks.views.WarningWindow;
-import ua.edu.sumdu.j2se.volyk.tasks.views.Window;
+import ua.edu.sumdu.j2se.volyk.tasks.views.*;
 
 import java.util.Optional;
 
-public class Controller {
+public abstract class Controller {
     protected Window window;
 
     public Window getWindow() {
@@ -26,6 +23,10 @@ public class Controller {
 
     public void showInfoWindow(String text) {
         new InfoWindow(text);
+    }
+
+    public void showErrorWindow(String text) {
+        new ErrorWindow(text);
     }
 
     public boolean showConfirmationWindow(String header, String text) {
