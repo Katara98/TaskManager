@@ -43,8 +43,7 @@ public class NotificationController implements Runnable {
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
-                mainWindowController.showInfoWindow("Time now: " + new Date()
-                        + "\nTime to do: " + task.toString());
+                mainWindowController.showInfoWindow("Time to do: " + task.toString());
             }
         });
     }
