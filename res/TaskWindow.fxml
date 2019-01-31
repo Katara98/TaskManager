@@ -20,12 +20,12 @@
       <AnchorPane fx:id="repeatableTaskFields" layoutY="200.0" prefHeight="104.0" prefWidth="439.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
          <children>
             <Label layoutX="35.0" layoutY="18.0" text="End time:" AnchorPane.leftAnchor="35.0" />
-            <Label layoutX="35.0" layoutY="68.0" text="Repeat interval, in seconds:" AnchorPane.leftAnchor="35.0" />
-            <TextField fx:id="endTimeField" layoutX="161.0" layoutY="13.0" prefHeight="31.0" prefWidth="246.0" promptText="yyyy-MM-dd HH:mm:ss" AnchorPane.leftAnchor="158.0" AnchorPane.rightAnchor="35.0" />
+            <Label layoutX="35.0" layoutY="68.0" text="Repeat interval, in minutes:" AnchorPane.leftAnchor="35.0" />
+            <TextField fx:id="endTimeField" layoutX="161.0" layoutY="13.0" prefHeight="31.0" prefWidth="246.0" promptText="yyyy-MM-dd HH:mm" AnchorPane.leftAnchor="158.0" AnchorPane.rightAnchor="35.0" />
             <TextField fx:id="repeatIntervalField" layoutX="235.0" layoutY="63.0" prefHeight="31.0" prefWidth="169.0" AnchorPane.leftAnchor="235.0" AnchorPane.rightAnchor="35.0" />
          </children>
       </AnchorPane>
       <Label fx:id="startTimeLabel" layoutX="33.0" layoutY="175.0" text="Start time:" AnchorPane.leftAnchor="33.0" />
-      <TextField fx:id="startTimeField" layoutX="158.0" layoutY="171.0" prefHeight="31.0" prefWidth="246.0" promptText="yyyy-MM-dd HH:mm:ss" AnchorPane.leftAnchor="158.0" AnchorPane.rightAnchor="35.0" />
+      <TextField fx:id="startTimeField" layoutX="158.0" layoutY="171.0" prefHeight="31.0" prefWidth="246.0" promptText="yyyy-MM-dd HH:mm" AnchorPane.leftAnchor="158.0" AnchorPane.rightAnchor="35.0" />
    </children>
 </AnchorPane>

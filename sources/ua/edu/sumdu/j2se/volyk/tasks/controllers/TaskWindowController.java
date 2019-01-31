@@ -21,7 +21,7 @@ public class TaskWindowController extends Controller {
     private WindowType type;
     private Task task;
     private boolean okClicked = false;
-    private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
     private final String unrepeatableStr = "Unrepeatable";
     private final String repeatableStr = "Repeatable";
 
@@ -119,7 +119,7 @@ public class TaskWindowController extends Controller {
                 okClicked = false;
             }
         } else {
-            showWarningWindow("Invalid values in fields", "Format for date input: yyyy-MM-dd HH:mm:ss.\nRepeat interval must be integer and >=0");
+            showWarningWindow("Invalid values in fields", "Format for date input: yyyy-MM-dd HH:mm.\nRepeat interval must be integer and >=0");
             okClicked = false;
         }
     }

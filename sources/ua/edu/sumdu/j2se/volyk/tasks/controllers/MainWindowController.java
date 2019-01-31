@@ -29,7 +29,7 @@ public class MainWindowController extends Controller {
     private static final Logger log = Logger.getLogger(MainWindowController.class);
     private TaskList list;
     private ObservableList<Task> tasks;
-    private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
     private File lastFile;
     private boolean isSavedFile = true;
     private boolean isButtonsDisabled = true;
@@ -249,7 +249,7 @@ public class MainWindowController extends Controller {
             log.info("Calendar is showed");
         } catch (ParseException e) {
             log.warn("Invalid values in fields 'From' and/or 'To'");
-            showWarningWindow("Invalid values in fields 'From' and/or 'To'", "Format for input: yyyy-MM-dd HH:mm:ss");
+            showWarningWindow("Invalid values in fields 'From' and/or 'To'", "Format for input: yyyy-MM-dd HH:mm");
         }
     }
 

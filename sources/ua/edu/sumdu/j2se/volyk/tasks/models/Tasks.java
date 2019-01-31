@@ -34,7 +34,7 @@ public class Tasks {
                 } else {
                     endD = end.getTime();
                 }
-                for (; d <= endD; d += t.getRepeatInterval()*1000) {
+                for (; d <= endD; d += t.getRepeatInterval() * 60 * 1000) {
                     Date curDate = new Date(d);
                     addTaskToMap(map, curDate, t);
                 }

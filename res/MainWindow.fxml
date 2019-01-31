@@ -48,8 +48,8 @@
                             <TableColumn fx:id="taskTitleColumn" prefWidth="611.2000122070312" resizable="false" text="Title" />
                           </columns>
                         </TableView>
-                        <TextField fx:id="fromDateField" layoutX="59.0" layoutY="10.0" promptText="yyyy-MM-dd HH:mm:ss" />
-                        <TextField fx:id="toDateField" layoutX="347.0" layoutY="10.0" promptText="yyyy-MM-dd HH:mm:ss" />
+                        <TextField fx:id="fromDateField" layoutX="59.0" layoutY="10.0" promptText="yyyy-MM-dd HH:mm" />
+                        <TextField fx:id="toDateField" layoutX="347.0" layoutY="10.0" promptText="yyyy-MM-dd HH:mm" />
                      </children>
                   </AnchorPane>
                </content>

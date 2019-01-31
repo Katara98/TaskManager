@@ -187,7 +187,7 @@ public class Task implements Cloneable, Serializable {
 		} else if (current.before(startTime)) {
 			return startTime;
 		} else {
-			Date nextTime = new Date(current.getTime() + repeatInterval * 1000 - (current.getTime() - startTime.getTime()) % (repeatInterval * 1000));
+			Date nextTime = new Date(current.getTime() + repeatInterval * 60 * 1000 - (current.getTime() - startTime.getTime()) % (repeatInterval * 60 * 1000));
 			return (!nextTime.after(endTime)) ? nextTime : null;
 		}
 
@@ -262,7 +262,7 @@ public class Task implements Cloneable, Serializable {
 	public String toString() {
 		if (isActive()) {
 			if (isRepeated()) {
-				return "Task \"" + getTitle() + "\" from " + getStartTime() + " to " + getEndTime() + " every " + getRepeatInterval() + " seconds";
+				return "Task \"" + getTitle() + "\" from " + getStartTime() + " to " + getEndTime() + " every " + getRepeatInterval() + " minutes";
 			} else {
 				return "Task \"" + getTitle() + "\" at " + getStartTime();
 			}
