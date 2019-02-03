@@ -10,6 +10,7 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import org.apache.log4j.Logger;
 import ua.edu.sumdu.j2se.volyk.tasks.models.*;
+import ua.edu.sumdu.j2se.volyk.tasks.views.DialogWindow;
 import ua.edu.sumdu.j2se.volyk.tasks.views.MainWindowView;
 import ua.edu.sumdu.j2se.volyk.tasks.views.TaskWindowView;
 import ua.edu.sumdu.j2se.volyk.tasks.views.View;
@@ -19,7 +20,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-public class MainWindowController extends Controller {
+public class MainWindowController {
     private static final Logger log = Logger.getLogger(MainWindowController.class);
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm");
     private TaskList list;
@@ -46,11 +47,11 @@ public class MainWindowController extends Controller {
                 }
             } catch (IOException e1) {
                 log.error("IOException happened!", e1);
-                showErrorWindow("IOException happened!");
+                DialogWindow.showErrorWindow("IOException happened!");
             }
         } catch (IOException e) {
             log.error("IOException happened!", e);
-            showErrorWindow("IOException happened!");
+            DialogWindow.showErrorWindow("IOException happened!");
         }
 
         view.getStage().setOnCloseRequest(new EventHandler<WindowEvent>() {
@@ -113,7 +114,7 @@ public class MainWindowController extends Controller {
         int selectedIndex = mainWindowView.getSelectedIndex();
         if (selectedIndex >= 0) {
             log.info("Delete selected task: " + mainWindowView.getSelectedTask());
-            if (showConfirmationWindow("Are you sure to delete this task?", mainWindowView.getSelectedTask().toString())) {
+            if (DialogWindow.showConfirmationWindow("Are you sure to delete this task?", mainWindowView.getSelectedTask().toString())) {
                 tasks.remove(selectedIndex);
                 isSavedFile = false;
                 log.info("Task is deleted");
@@ -145,7 +146,7 @@ public class MainWindowController extends Controller {
             log.info("Calendar is showed");
         } catch (ParseException e) {
             log.warn("Invalid values in fields 'From' and/or 'To'");
-            showWarningWindow("Invalid values in fields 'From' and/or 'To'", "Format for input: yyyy-MM-dd HH:mm");
+            DialogWindow.showWarningWindow("Invalid values in fields 'From' and/or 'To'", "Format for input: yyyy-MM-dd HH:mm");
         }
     }
 
@@ -168,7 +169,7 @@ public class MainWindowController extends Controller {
     }
 
     public void exit() {
-        if (list != null && !isSavedFile && showConfirmationWindow("Do you want to save changes?", null)) {
+        if (list != null && !isSavedFile && DialogWindow.showConfirmationWindow("Do you want to save changes before exit?", null)) {
             saveList();
         }
         if (lastFile != null) {
@@ -177,7 +178,7 @@ public class MainWindowController extends Controller {
                 writer.write(lastFile.getAbsolutePath());
             } catch (IOException e) {
                 log.error("IOException happened!", e);
-                showErrorWindow("IOException happened!");
+                DialogWindow.showErrorWindow("IOException happened!");
             }
         }
         System.exit(0);
@@ -185,7 +186,7 @@ public class MainWindowController extends Controller {
 
     public void loadListFromFile() {
         if (list != null) {
-            if (showConfirmationWindow("Do you want to save changes before loading new list?", null)) {
+            if (DialogWindow.showConfirmationWindow("Do you want to save changes before loading new list?", null)) {
                 saveList();
             }
         }
@@ -205,10 +206,10 @@ public class MainWindowController extends Controller {
                 log.info("List is loaded from file: " + lastFile.getPath());
             } catch (IOException e) {
                 log.error("IOException happened!", e);
-                showErrorWindow("IOException happened!");
+                DialogWindow.showErrorWindow("IOException happened!");
             } catch (ParseException e) {
                 log.error("The data in the file is not in the appropriate format.");
-                showErrorWindow("The data in the file is not in the appropriate format.");
+                DialogWindow.showErrorWindow("The data in the file is not in the appropriate format.");
             }
         }
     }
@@ -221,7 +222,7 @@ public class MainWindowController extends Controller {
                 if (lastFile.isFile()) {
                     loadFromFile();
                 } else {
-                    showErrorWindow("File not found!");
+                    DialogWindow.showErrorWindow("File not found!");
                     try (BufferedWriter writer = new BufferedWriter(new FileWriter(recentFileName))) {
                         writer.flush();
                     }
@@ -230,13 +231,13 @@ public class MainWindowController extends Controller {
             }
         } catch (IOException e) {
             log.error("IOException happened!", e);
-            showErrorWindow("IOException happened!");
+            DialogWindow.showErrorWindow("IOException happened!");
         }
     }
 
     public void loadNewList() {
         if (list != null && !isSavedFile) {
-            if (showConfirmationWindow("Do you want to save changes before loading new list?", null)) {
+            if (DialogWindow.showConfirmationWindow("Do you want to save changes before loading new list?", null)) {
                 saveList();
             }
         }
@@ -276,7 +277,7 @@ public class MainWindowController extends Controller {
                 log.info("List is saved in file: " + lastFile.getPath());
             } catch (IOException e) {
                 log.error("IOException happened!", e);
-                showErrorWindow("IOException happened!");
+                DialogWindow.showErrorWindow("IOException happened!");
             }
         }
     }
@@ -303,11 +304,11 @@ public class MainWindowController extends Controller {
             } catch (ParseException e) {
                 taskWindowView.setOkClicked(false);
             } catch (IllegalArgumentException e) {
-                showWarningWindow("Invalid values in fields", e.getMessage());
+                DialogWindow.showWarningWindow("Invalid values in fields", e.getMessage());
                 taskWindowView.setOkClicked(false);
             }
         } else {
-            showWarningWindow("Invalid values in fields", "Format for date input: yyyy-MM-dd HH:mm.\nRepeat interval must be integer and >=0");
+            DialogWindow.showWarningWindow("Invalid values in fields", "Format for date input: yyyy-MM-dd HH:mm.\nRepeat interval must be integer and >=0");
             taskWindowView.setOkClicked(false);
         }
     }

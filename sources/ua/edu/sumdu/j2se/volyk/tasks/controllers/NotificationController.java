@@ -2,6 +2,8 @@ package ua.edu.sumdu.j2se.volyk.tasks.controllers;
 
 import javafx.application.Platform;
 import ua.edu.sumdu.j2se.volyk.tasks.models.Task;
+import ua.edu.sumdu.j2se.volyk.tasks.views.DialogWindow;
+
 import java.util.Date;
 import java.util.List;
 
@@ -43,7 +45,7 @@ public class NotificationController implements Runnable {
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
-                mainWindowController.showInfoWindow("Time to do: " + task.toString());
+                DialogWindow.showInfoWindow("Time to do: " + task.toString());
             }
         });
     }
