@@ -1,5 +1,6 @@
 package ua.edu.sumdu.j2se.volyk.tasks.controllers;
 
+import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -20,7 +21,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-public class MainWindowController {
+public class MainWindowController extends Application {
     private static final Logger log = Logger.getLogger(MainWindowController.class);
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm");
     private TaskList list;
@@ -30,6 +31,10 @@ public class MainWindowController {
     private String recentFileName = System.getProperty("user.dir") + "\\recentFile.txt";
     private TaskWindowView taskWindowView;
     private MainWindowView mainWindowView;
+
+    public MainWindowController() {
+
+    }
 
     public MainWindowController(MainWindowView view) {
         mainWindowView = view;
@@ -59,6 +64,20 @@ public class MainWindowController {
                 exit();
             }
         });
+    }
+
+    public static void main(String[] args) {
+        launch(args);
+    }
+
+    @Override
+    public void start(Stage primaryStage) throws Exception {
+        log.info("Starting TaskManager application");
+        log.debug("Creating main view window from: /MainWindow.fxml");
+        MainWindowView view = (MainWindowView) View.loadViewFromFxml(primaryStage, "/MainWindow.fxml", "TaskManager");
+        MainWindowController controller = new MainWindowController(view);
+        view.setController(controller);
+        view.showStage();
     }
 
     public ObservableList<Task> getTasks() {
