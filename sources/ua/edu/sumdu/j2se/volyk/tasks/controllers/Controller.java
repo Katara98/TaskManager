@@ -7,16 +7,6 @@ import ua.edu.sumdu.j2se.volyk.tasks.views.*;
 import java.util.Optional;
 
 public abstract class Controller {
-    protected Window window;
-
-    public Window getWindow() {
-        return window;
-    }
-
-    public void setWindow(Window window) {
-        this.window = window;
-    }
-
     public void showWarningWindow(String header, String text) {
         new WarningWindow(header, text);
     }

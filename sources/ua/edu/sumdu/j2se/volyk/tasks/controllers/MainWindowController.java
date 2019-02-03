@@ -1,24 +1,18 @@
 package ua.edu.sumdu.j2se.volyk.tasks.controllers;
 
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
-import javafx.collections.ObservableMap;
-import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.fxml.FXML;
-import javafx.scene.Node;
-import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import org.apache.log4j.Logger;
 import ua.edu.sumdu.j2se.volyk.tasks.models.*;
-import ua.edu.sumdu.j2se.volyk.tasks.views.ConfirmationWindow;
-import ua.edu.sumdu.j2se.volyk.tasks.views.Window;
+import ua.edu.sumdu.j2se.volyk.tasks.views.MainWindowView;
+import ua.edu.sumdu.j2se.volyk.tasks.views.TaskWindowView;
+import ua.edu.sumdu.j2se.volyk.tasks.views.View;
 
 import java.io.*;
 import java.text.ParseException;
@@ -27,111 +21,24 @@ import java.util.*;
 
 public class MainWindowController extends Controller {
     private static final Logger log = Logger.getLogger(MainWindowController.class);
+    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm");
     private TaskList list;
     private ObservableList<Task> tasks;
-    private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
     private File lastFile;
     private boolean isSavedFile = true;
-    private boolean isButtonsDisabled = true;
     private String recentFileName = System.getProperty("user.dir") + "\\recentFile.txt";
+    private TaskWindowView taskWindowView;
+    private MainWindowView mainWindowView;
 
-    @Override
-    public void setWindow(Window window) {
-        super.setWindow(window);
-        window.getStage().setOnCloseRequest(new EventHandler<WindowEvent>() {
-            public void handle(WindowEvent we) {
-                exit();
-            }
-        });
-    }
-
-    public class Item {
-        private String date;
-        private String set;
-
-        public String getDate() {
-            return date;
-        }
-
-        public void setDate(String date) {
-            this.date = date;
-        }
-
-        public String getSet() {
-            return set;
-        }
-
-        public void setSet(String set) {
-            this.set = set;
-        }
-
-        Item(Date date, Set<Task> set) {
-            this.date = dateFormat.format(date);
-            this.set = setToString(set);
-        }
-
-        private String setToString(Set<Task> set) {
-            StringBuilder result = new StringBuilder();
-            int i = 0;
-            for (Task task : set) {
-                result.append(task.getTitle());
-                if (i == set.size() - 1) {
-                    break;
-                }
-                result.append(", ");
-                i++;
-            }
-            return result.toString();
-        }
-    }
-
-    ObservableList<Item> calendarItems;
-
-    public ObservableList<Task> getTasks() {
-        return tasks;
-    }
-
-    @FXML
-    private ToolBar tasksToolbar;
-
-    @FXML
-    private ListView<Task> taskList;
-
-    @FXML
-    private TextField fromDateField;
-
-    @FXML
-    private TextField toDateField;
-
-    @FXML
-    private TableView<Item> calendarTable;
-
-    @FXML
-    private TableColumn<Item, String> dateColumn;
-
-    @FXML
-    private TableColumn<Item, String> taskTitleColumn;
-
-    @FXML
-    private MenuItem saveButton;
-
-    @FXML
-    private MenuItem saveAsButton;
-
-    @FXML
-    private MenuItem fromPrevSessionButton;
-
-    public void initialize() {
-        dateColumn.setCellValueFactory(new PropertyValueFactory<Item, String>("date"));
-        taskTitleColumn.setCellValueFactory(new PropertyValueFactory<Item, String>("set"));
-        setTaskAndSaveButtonsDisabled(true);
+    public MainWindowController(MainWindowView view) {
+        mainWindowView = view;
         try (BufferedReader reader = new BufferedReader(new FileReader(recentFileName))) {
             String fileName = reader.readLine();
             if (fileName == null) {
-                fromPrevSessionButton.setDisable(true);
+                mainWindowView.setFromPrevSessionButtonDisabled(true);
             }
         } catch (FileNotFoundException e) {
-            fromPrevSessionButton.setDisable(true);
+            mainWindowView.setFromPrevSessionButtonDisabled(true);
             File file = new File(recentFileName);
             try {
                 if (file.createNewFile()) {
@@ -145,15 +52,16 @@ public class MainWindowController extends Controller {
             log.error("IOException happened!", e);
             showErrorWindow("IOException happened!");
         }
+
+        view.getStage().setOnCloseRequest(new EventHandler<WindowEvent>() {
+            public void handle(WindowEvent we) {
+                exit();
+            }
+        });
     }
 
-    private void setTaskAndSaveButtonsDisabled(boolean disabled) {
-        ObservableList<Node> taskButtons = tasksToolbar.getItems();
-        for (Node n : taskButtons) {
-            n.setDisable(disabled);
-        }
-        saveButton.setDisable(disabled);
-        saveAsButton.setDisable(disabled);
+    public ObservableList<Task> getTasks() {
+        return tasks;
     }
 
     private void initObservableTaskList() {
@@ -162,20 +70,17 @@ public class MainWindowController extends Controller {
             @Override
             public void onChanged(ListChangeListener.Change<? extends Task> c) {
                 while (c.next()) {
-                    if (c.wasUpdated()) {
-                        //update item
-                    } else {
-                        for (Task t : c.getRemoved()) {
-                            list.remove(t);
-                        }
-                        for (Task t : c.getAddedSubList()) {
-                            list.add(t);
-                        }
+                    for (Task t : c.getRemoved()) {
+                        list.remove(t);
                     }
+                    /*for (Task t : c.getAddedSubList()) {
+                        list.add(t);
+                    }*/
+                    list.addAll(c.getAddedSubList());
                 }
             }
         });
-        taskList.setItems(tasks);
+        mainWindowView.setTaskListItems(tasks);
     }
 
     private void startNotificationThread() {
@@ -184,34 +89,31 @@ public class MainWindowController extends Controller {
         log.info("Notification thread started");
     }
 
-    @FXML
-    void addTask(ActionEvent event) {
+    public void addTask() {
         log.info("Adding new task");
-        TaskWindowController controller = showTaskWindow(null, WindowType.add);
-        if (controller.isOkClicked()) {
+        showTaskWindow(null, WindowType.add);
+        if (taskWindowView.isOkClicked()) {
             synchronized (tasks) {
                 isSavedFile = false;
-                tasks.add(controller.getTask());
+                tasks.add(taskWindowView.getTask());
                 log.info("New task is added");
             }
         }
     }
 
-    @FXML
-    void viewTask(ActionEvent event) {
-        Task selectedTask = taskList.getSelectionModel().getSelectedItem();
+    public void viewTask() {
+        Task selectedTask = mainWindowView.getSelectedTask();
         if (selectedTask != null) {
             log.info("View selected task: " + selectedTask);
             showTaskWindow(selectedTask, WindowType.view);
         }
     }
 
-    @FXML
-    void deleteTask(ActionEvent event) {
-        int selectedIndex = taskList.getSelectionModel().getSelectedIndex();
+    public void deleteTask() {
+        int selectedIndex = mainWindowView.getSelectedIndex();
         if (selectedIndex >= 0) {
-            log.info("Delete selected task: " + taskList.getSelectionModel().getSelectedItem());
-            if (showConfirmationWindow("Are you sure to delete this task?", taskList.getSelectionModel().getSelectedItem().toString())) {
+            log.info("Delete selected task: " + mainWindowView.getSelectedTask());
+            if (showConfirmationWindow("Are you sure to delete this task?", mainWindowView.getSelectedTask().toString())) {
                 tasks.remove(selectedIndex);
                 isSavedFile = false;
                 log.info("Task is deleted");
@@ -219,33 +121,27 @@ public class MainWindowController extends Controller {
         }
     }
 
-    @FXML
-    void editTask(ActionEvent event) {
-        Task selectedTask = taskList.getSelectionModel().getSelectedItem();
-        int index = taskList.getSelectionModel().getSelectedIndex();
+    public void editTask() {
+        Task selectedTask = mainWindowView.getSelectedTask();
+        int index = mainWindowView.getSelectedIndex();
         if (selectedTask != null) {
             log.info("Editing selected task: " + selectedTask);
-            TaskWindowController controller = showTaskWindow(selectedTask, WindowType.edit);
-            if (controller.isOkClicked()) {
-                tasks.remove(taskList.getSelectionModel().getSelectedItem());
-                tasks.add(index, controller.getTask());
-                taskList.getSelectionModel().select(index);
+            showTaskWindow(selectedTask, WindowType.edit);
+            if (taskWindowView.isOkClicked()) {
+                tasks.remove(mainWindowView.getSelectedTask());
+                tasks.add(index, taskWindowView.getTask());
+                //taskList.getSelectionModel().select(index);
                 isSavedFile = false;
             }
         }
     }
 
-    @FXML
-    void showCalendar(ActionEvent event) {
+    public void showCalendar() {
         try {
-            Date fromDate = dateFormat.parse(fromDateField.getText());
-            Date toDate = dateFormat.parse(toDateField.getText());
+            Date fromDate = DATE_FORMAT.parse(mainWindowView.getFromDate());
+            Date toDate = DATE_FORMAT.parse(mainWindowView.getToDate());
             SortedMap<Date, Set<Task>> map = Tasks.calendar(tasks, fromDate, toDate);
-            calendarItems = FXCollections.observableArrayList();
-            for (Map.Entry<Date, Set<Task>> entry : map.entrySet()) {
-                calendarItems.add(new Item(entry.getKey(), entry.getValue()));
-            }
-            calendarTable.setItems(calendarItems);
+            mainWindowView.setCalendarItems(map);
             log.info("Calendar is showed");
         } catch (ParseException e) {
             log.warn("Invalid values in fields 'From' and/or 'To'");
@@ -253,32 +149,25 @@ public class MainWindowController extends Controller {
         }
     }
 
-    private TaskWindowController showTaskWindow(Task task, WindowType type) {
+    private void showTaskWindow(Task task, WindowType type) {
         Stage dialogStage = new Stage();
-        dialogStage.initOwner(window.getStage());
+        dialogStage.initOwner(mainWindowView.getStage());
         dialogStage.initModality(Modality.APPLICATION_MODAL);
-
-        Window newWindow = null;
         try {
-            newWindow = new Window(dialogStage, "/TaskWindow.fxml", "Task");
-            TaskWindowController controller = (TaskWindowController) newWindow.getController();
-            controller.setWindow(newWindow);
-
-            controller.setTask(task);
-            controller.setType(type);
-            controller.customizeView();
-
+            taskWindowView = (TaskWindowView) View.loadViewFromFxml(dialogStage, "/TaskWindow.fxml", "Task");
+            taskWindowView.setController(this);
+            taskWindowView.setTask(task);
+            taskWindowView.setType(type);
+            taskWindowView.customizeView();
             dialogStage.showAndWait();
             log.debug("Task window created.");
-            return controller;
         } catch (IOException e) {
             log.error("Can't create task window.", e);
             throw new RuntimeException("Can't create task window.");
         }
     }
 
-    @FXML
-    void exit() {
+    public void exit() {
         if (list != null && !isSavedFile && showConfirmationWindow("Do you want to save changes?", null)) {
             saveList();
         }
@@ -291,12 +180,10 @@ public class MainWindowController extends Controller {
                 showErrorWindow("IOException happened!");
             }
         }
-
         System.exit(0);
     }
 
-    @FXML
-    void loadListFromFile() {
+    public void loadListFromFile() {
         if (list != null) {
             if (showConfirmationWindow("Do you want to save changes before loading new list?", null)) {
                 saveList();
@@ -304,7 +191,7 @@ public class MainWindowController extends Controller {
         }
         FileChooser fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Text files", "*.txt"));
-        lastFile = fileChooser.showOpenDialog(getWindow().getStage());
+        lastFile = fileChooser.showOpenDialog(mainWindowView.getStage());
         loadFromFile();
     }
 
@@ -326,8 +213,7 @@ public class MainWindowController extends Controller {
         }
     }
 
-    @FXML
-    void loadFromPrev(ActionEvent event) {
+    public void loadFromPrev() {
         try (BufferedReader reader = new BufferedReader(new FileReader(recentFileName))) {
             String fileName = reader.readLine();
             if (fileName != null) {
@@ -339,7 +225,7 @@ public class MainWindowController extends Controller {
                     try (BufferedWriter writer = new BufferedWriter(new FileWriter(recentFileName))) {
                         writer.flush();
                     }
-                    fromPrevSessionButton.setDisable(true);
+                    mainWindowView.setFromPrevSessionButtonDisabled(true);
                 }
             }
         } catch (IOException e) {
@@ -348,8 +234,7 @@ public class MainWindowController extends Controller {
         }
     }
 
-    @FXML
-    void loadNewList(ActionEvent event) {
+    public void loadNewList() {
         if (list != null && !isSavedFile) {
             if (showConfirmationWindow("Do you want to save changes before loading new list?", null)) {
                 saveList();
@@ -362,14 +247,13 @@ public class MainWindowController extends Controller {
 
     private void initList() {
         initObservableTaskList();
-        if (isButtonsDisabled) {
-            setTaskAndSaveButtonsDisabled(false);
+        if (mainWindowView.isTaskAndSaveButtonsDisabled()) {
+            mainWindowView.setTaskAndSaveButtonsDisabled(false);
         }
         startNotificationThread();
     }
 
-    @FXML
-    void saveList() {
+    public void saveList() {
         if (lastFile == null) {
             saveListAs();
         } else {
@@ -377,11 +261,10 @@ public class MainWindowController extends Controller {
         }
     }
 
-    @FXML
-    void saveListAs() {
+    public void saveListAs() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Text files", "*.txt"));
-        lastFile = fileChooser.showSaveDialog(getWindow().getStage());
+        lastFile = fileChooser.showSaveDialog(mainWindowView.getStage());
         saveToFile();
     }
 
@@ -395,6 +278,53 @@ public class MainWindowController extends Controller {
                 log.error("IOException happened!", e);
                 showErrorWindow("IOException happened!");
             }
+        }
+    }
+
+    public void handleOkClick() {
+        String title = taskWindowView.getTaskTitle();
+        boolean isActive = taskWindowView.isActiveTask();
+        if (taskWindowView.getType() == WindowType.view) {
+            taskWindowView.setOkClicked(true);
+            taskWindowView.close();
+        } else if (isValidData()) {
+            try {
+                Date startDate = DATE_FORMAT.parse(taskWindowView.getStartTime());
+                if (taskWindowView.isRepeatedTask()) {
+                    Date endDate = DATE_FORMAT.parse(taskWindowView.getEndTime());
+                    int interval = Integer.parseInt(taskWindowView.getRepeatInterval());
+                    taskWindowView.setTask(new Task(title, startDate, endDate, interval));
+                } else {
+                    taskWindowView.setTask(new Task(title, startDate));
+                }
+                taskWindowView.getTask().setActive(isActive);
+                taskWindowView.setOkClicked(true);
+                taskWindowView.close();
+            } catch (ParseException e) {
+                taskWindowView.setOkClicked(false);
+            } catch (IllegalArgumentException e) {
+                showWarningWindow("Invalid values in fields", e.getMessage());
+                taskWindowView.setOkClicked(false);
+            }
+        } else {
+            showWarningWindow("Invalid values in fields", "Format for date input: yyyy-MM-dd HH:mm.\nRepeat interval must be integer and >=0");
+            taskWindowView.setOkClicked(false);
+        }
+    }
+
+    private boolean isValidData() {
+        try {
+            if (taskWindowView.getTaskType() == null) {
+                return false;
+            }
+            DATE_FORMAT.parse(taskWindowView.getStartTime());
+            if (taskWindowView.isRepeatedTask()) {
+                DATE_FORMAT.parse(taskWindowView.getEndTime());
+                Integer.parseInt(taskWindowView.getRepeatInterval());
+            }
+            return true;
+        } catch (ParseException | NumberFormatException e) {
+            return false;
         }
     }
 }
