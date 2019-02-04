@@ -13,6 +13,9 @@ import ua.edu.sumdu.j2se.volyk.tasks.models.Task;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+/**
+ * Represents a view of the application task window
+ */
 public class TaskWindowView extends View {
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm");
     private WindowType type;
@@ -69,38 +72,74 @@ public class TaskWindowView extends View {
         return type;
     }
 
+    /**
+     * Returns the text value of the task title field
+     * @return the text value of the task title field
+     */
     public String getTaskTitle() {
         return taskTitleField.getText();
     }
 
+    /**
+     * Returns whether "Active" CheckBox is checked
+     * @return whether "Active" CheckBox is checked
+     */
     public boolean isActiveTask() {
         return activeCheckBox.isSelected();
     }
 
+    /**
+     * Returns the text value of the start time field
+     * @return the text value of the start time field
+     */
     public String getStartTime() {
         return startTimeField.getText();
     }
 
+    /**
+     * Returns the text value of the end time field
+     * @return the text value of the end time field
+     */
     public String getEndTime() {
         return endTimeField.getText();
     }
 
+    /**
+     * Returns the text value of the repeated interval field
+     * @return the text value of the repeated interval field
+     */
     public String getRepeatInterval() {
         return repeatIntervalField.getText();
     }
 
+    /**
+     * Returns the text value of the selected task type
+     * @return the text value of the selected task type
+     */
     public String getTaskType() {
         return taskTypeComboBox.getSelectionModel().getSelectedItem();
     }
 
+    /**
+     * Returns whether the selected task type is repeatable
+     * @return whether the selected task type is repeatable
+     */
     public boolean isRepeatedTask() {
         return taskTypeComboBox.getSelectionModel().getSelectedItem().equals(repeatableStr);
     }
 
+    /**
+     * Closes this stage
+     */
     public void close() {
         this.getStage().close();
     }
 
+    /**
+     * Customizes view according to the current window type. If type is WindowType.add all fields are staying empty.
+     * Else fields are filled with appropriate values of task.
+     * If type is WindowType.view all fields are becoming unchangeable
+     */
     public void customizeView() {
         if (type != WindowType.add) {
             taskTitleField.setText(task.getTitle());
@@ -138,10 +177,16 @@ public class TaskWindowView extends View {
         }
     }
 
+    /**
+     * Initializes state of the view
+     */
     public void initialize() {
         taskTypeComboBox.getItems().addAll(unrepeatableStr, repeatableStr);
     }
 
+    /**
+     * Event handler for selection event on task type ComboBox. Changes visible fields for the task
+     */
     @FXML
     void changeTaskFields() {
         String selected = taskTypeComboBox.getSelectionModel().getSelectedItem();
@@ -154,11 +199,17 @@ public class TaskWindowView extends View {
         }
     }
 
+    /**
+     * Event handler for "Cancel" button click
+     */
     @FXML
-    void handleCancelClick(ActionEvent event) {
+    void handleCancelClick() {
         close();
     }
 
+    /**
+     * Event handler for "OK" button click
+     */
     @FXML
     void handleOkClick() {
         controller.handleOkClick();

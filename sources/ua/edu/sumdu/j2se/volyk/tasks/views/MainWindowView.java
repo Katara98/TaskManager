@@ -16,12 +16,18 @@ import java.util.Map;
 import java.util.Set;
 import java.util.SortedMap;
 
+/**
+ * Represents a view of the application main window
+ */
 public class MainWindowView extends View {
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm");
     private boolean isButtonsDisabled = true;
     private MainWindowController controller;
     private ObservableList<Item> calendarItems;
 
+    /**
+     * Class for converting calendar items to items that can be used in TableView
+     */
     public class Item {
         private String date;
         private String set;
@@ -91,12 +97,19 @@ public class MainWindowView extends View {
         return isButtonsDisabled;
     }
 
+    /**
+     * Initializes state of the view
+     */
     public void initialize() {
         dateColumn.setCellValueFactory(new PropertyValueFactory<Item, String>("date"));
         taskTitleColumn.setCellValueFactory(new PropertyValueFactory<Item, String>("set"));
         setTaskAndSaveButtonsDisabled(true);
     }
 
+    /**
+     * Sets the individual disabled state for all tasks toolbar buttons, "Save" and "Save as" menu items
+     * @param disabled
+     */
     public void setTaskAndSaveButtonsDisabled(boolean disabled) {
         ObservableList<Node> taskButtons = tasksToolbar.getItems();
         for (Node n : taskButtons) {
@@ -106,30 +119,58 @@ public class MainWindowView extends View {
         saveAsButton.setDisable(disabled);
     }
 
+    /**
+     * Returns selected task in the list
+     * @return selected task in the list
+     */
     public Task getSelectedTask() {
         return taskList.getSelectionModel().getSelectedItem();
     }
 
+    /**
+     * Returns index of the selected task in the list
+     * @return index of the selected task in the list
+     */
     public int getSelectedIndex() {
         return taskList.getSelectionModel().getSelectedIndex();
     }
 
+    /**
+     * Returns the text value of the "From" time field
+     * @return the text value of the "From" time field
+     */
     public String getFromDate() {
         return fromDateField.getText();
     }
 
+    /**
+     * Returns the text value of the "To" time field
+     * @return the text value of the "To" time field
+     */
     public String getToDate() {
         return toDateField.getText();
     }
 
+    /**
+     * Sets the individual disabled state for the "Load from previous session" menu item
+     * @param disabled the individual disabled state
+     */
     public void setFromPrevSessionButtonDisabled(boolean disabled) {
         fromPrevSessionButton.setDisable(disabled);
     }
 
+    /**
+     * Sets task list items for the ListView
+     * @param tasks task list items
+     */
     public void setTaskListItems(ObservableList<Task> tasks) {
         taskList.setItems(tasks);
     }
 
+    /**
+     * Sets calendar items for CalendarTable
+     * @param map calendar items
+     */
     public void setCalendarItems(SortedMap<Date, Set<Task>> map) {
         calendarItems = FXCollections.observableArrayList();
         for (Map.Entry<Date, Set<Task>> entry : map.entrySet()) {
@@ -138,56 +179,89 @@ public class MainWindowView extends View {
         calendarTable.setItems(calendarItems);
     }
 
+    /**
+     * Event handler for "Add task" button click
+     */
     @FXML
-    void addTask(ActionEvent event) {
+    void addTask() {
         controller.addTask();
     }
 
+    /**
+     * Event handler for "View task" button click
+     */
     @FXML
-    void viewTask(ActionEvent event) {
+    void viewTask() {
         controller.viewTask();
     }
 
+    /**
+     * Event handler for "Delete task" button click
+     */
     @FXML
-    void deleteTask(ActionEvent event) {
+    void deleteTask() {
         controller.deleteTask();
     }
 
+    /**
+     * Event handler for "Edit task" button click
+     */
     @FXML
-    void editTask(ActionEvent event) {
+    void editTask() {
         controller.editTask();
     }
 
+    /**
+     * Event handler for "Show calendar" button click
+     */
     @FXML
-    void showCalendar(ActionEvent event) {
+    void showCalendar() {
         controller.showCalendar();
     }
 
+    /**
+     * Event handler for "Exit" menu item click
+     */
     @FXML
     void exit() {
         controller.exit();
     }
 
+    /**
+     * Event handler for "Load from file..." menu item click
+     */
     @FXML
     void loadListFromFile() {
         controller.loadListFromFile();
     }
 
+    /**
+     * Event handler for "Load from previous session" menu item click
+     */
     @FXML
-    void loadFromPrev(ActionEvent event) {
+    void loadFromPrev() {
         controller.loadFromPrev();
     }
 
+    /**
+     * Event handler for "Load new list" menu item click
+     */
     @FXML
-    void loadNewList(ActionEvent event) {
+    void loadNewList() {
         controller.loadNewList();
     }
 
+    /**
+     * Event handler for "Save list" menu item click
+     */
     @FXML
     void saveList() {
         controller.saveList();
     }
 
+    /**
+     * Event handler for "Save as" menu item click
+     */
     @FXML
     void saveListAs() {
         controller.saveListAs();

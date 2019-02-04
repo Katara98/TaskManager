@@ -19,8 +19,13 @@ import ua.edu.sumdu.j2se.volyk.tasks.views.View;
 import java.io.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Date;
+import java.util.Set;
+import java.util.SortedMap;
 
+/**
+ * Main controller of the application
+ */
 public class MainWindowController extends Application {
     private static final Logger log = Logger.getLogger(MainWindowController.class);
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm");
@@ -33,9 +38,14 @@ public class MainWindowController extends Application {
     private MainWindowView mainWindowView;
 
     public MainWindowController() {
-
     }
 
+    /**
+     * Creates new main controller with the view.
+     * If there is no file from previous session "Load from previous session" menu item is set disabled.
+     * If file where the path to the file from previous session is not found, new file is created
+     * @param view
+     */
     public MainWindowController(MainWindowView view) {
         mainWindowView = view;
         try (BufferedReader reader = new BufferedReader(new FileReader(recentFileName))) {
@@ -66,10 +76,9 @@ public class MainWindowController extends Application {
         });
     }
 
-    public static void main(String[] args) {
-        launch(args);
-    }
-
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void start(Stage primaryStage) throws Exception {
         log.info("Starting TaskManager application");
@@ -84,6 +93,9 @@ public class MainWindowController extends Application {
         return tasks;
     }
 
+    /**
+     * Initiates observable task list
+     */
     private void initObservableTaskList() {
         tasks = FXCollections.observableArrayList(list);
         tasks.addListener(new ListChangeListener<Task>() {
@@ -103,12 +115,18 @@ public class MainWindowController extends Application {
         mainWindowView.setTaskListItems(tasks);
     }
 
+    /**
+     * Starts notification thread
+     */
     private void startNotificationThread() {
         Thread notificationThread = new Thread(new NotificationController(this));
         notificationThread.start();
         log.info("Notification thread started");
     }
 
+    /**
+     * Shows task window for adding new task to the list
+     */
     public void addTask() {
         log.info("Adding new task");
         showTaskWindow(null, WindowType.add);
@@ -121,6 +139,9 @@ public class MainWindowController extends Application {
         }
     }
 
+    /**
+     * Shows task window for viewing selected task from the list
+     */
     public void viewTask() {
         Task selectedTask = mainWindowView.getSelectedTask();
         if (selectedTask != null) {
@@ -129,6 +150,9 @@ public class MainWindowController extends Application {
         }
     }
 
+    /**
+     * Deletes selected task from the list
+     */
     public void deleteTask() {
         int selectedIndex = mainWindowView.getSelectedIndex();
         if (selectedIndex >= 0) {
@@ -141,6 +165,9 @@ public class MainWindowController extends Application {
         }
     }
 
+    /**
+     * Shows task window for editing selected task from the list
+     */
     public void editTask() {
         Task selectedTask = mainWindowView.getSelectedTask();
         int index = mainWindowView.getSelectedIndex();
@@ -156,6 +183,9 @@ public class MainWindowController extends Application {
         }
     }
 
+    /**
+     * Shows a calendar of tasks for a given period
+     */
     public void showCalendar() {
         try {
             Date fromDate = DATE_FORMAT.parse(mainWindowView.getFromDate());
@@ -169,6 +199,11 @@ public class MainWindowController extends Application {
         }
     }
 
+    /**
+     * Shows task window and waits for user to close it
+     * @param task task to be displayed in task window
+     * @param type window type
+     */
     private void showTaskWindow(Task task, WindowType type) {
         Stage dialogStage = new Stage();
         dialogStage.initOwner(mainWindowView.getStage());
@@ -187,6 +222,9 @@ public class MainWindowController extends Application {
         }
     }
 
+    /**
+     * Remembers last opened or saved file and ends the program
+     */
     public void exit() {
         if (list != null && !isSavedFile && DialogWindow.showConfirmationWindow("Do you want to save changes before exit?", null)) {
             saveList();
@@ -203,6 +241,9 @@ public class MainWindowController extends Application {
         System.exit(0);
     }
 
+    /**
+     * Loads task list from file that is chosen in FileChooser open dialog by user
+     */
     public void loadListFromFile() {
         if (list != null) {
             if (DialogWindow.showConfirmationWindow("Do you want to save changes before loading new list?", null)) {
@@ -215,6 +256,9 @@ public class MainWindowController extends Application {
         loadFromFile();
     }
 
+    /**
+     * Loads task list from the file that was last opened, saved or chosen in FileChooser open dialog
+     */
     private void loadFromFile() {
         list = new ArrayTaskList();
         if (lastFile != null) {
@@ -233,6 +277,9 @@ public class MainWindowController extends Application {
         }
     }
 
+    /**
+     * Loads task list fro previous session
+     */
     public void loadFromPrev() {
         try (BufferedReader reader = new BufferedReader(new FileReader(recentFileName))) {
             String fileName = reader.readLine();
@@ -254,6 +301,9 @@ public class MainWindowController extends Application {
         }
     }
 
+    /**
+     * Loads new task list
+     */
     public void loadNewList() {
         if (list != null && !isSavedFile) {
             if (DialogWindow.showConfirmationWindow("Do you want to save changes before loading new list?", null)) {
@@ -273,6 +323,9 @@ public class MainWindowController extends Application {
         startNotificationThread();
     }
 
+    /**
+     * Saves task list. If there is no last last opened or saved file, list is saved as a new file
+     */
     public void saveList() {
         if (lastFile == null) {
             saveListAs();
@@ -281,6 +334,9 @@ public class MainWindowController extends Application {
         }
     }
 
+    /**
+     * Saves list in a new file, that is chosen by user
+     */
     public void saveListAs() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Text files", "*.txt"));
@@ -288,6 +344,9 @@ public class MainWindowController extends Application {
         saveToFile();
     }
 
+    /**
+     * Saves task list to the file that was last opened, saved or chosen in FileChooser save dialog
+     */
     private void saveToFile() {
         if (lastFile != null) {
             try {
@@ -301,6 +360,11 @@ public class MainWindowController extends Application {
         }
     }
 
+    /**
+     * Function for handling click event for "OK" button from TaskWindowView.
+     * If window type - view, task window view is closed.
+     * Else input data from task window view is validates, then parsed and new task is created.
+     */
     public void handleOkClick() {
         String title = taskWindowView.getTaskTitle();
         boolean isActive = taskWindowView.isActiveTask();
@@ -332,6 +396,10 @@ public class MainWindowController extends Application {
         }
     }
 
+    /**
+     * Returns whether the entered data in TaskWindowView is valid
+     * @return whether the entered data in TaskWindowView is valid
+     */
     private boolean isValidData() {
         try {
             if (taskWindowView.getTaskType() == null) {

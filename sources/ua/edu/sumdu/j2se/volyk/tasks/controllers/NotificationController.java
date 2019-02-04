@@ -7,6 +7,9 @@ import ua.edu.sumdu.j2se.volyk.tasks.views.DialogWindow;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * Represents a notification thread for the application
+ */
 public class NotificationController implements Runnable {
     private MainWindowController mainWindowController;
     private long curTime = 0;
@@ -15,6 +18,9 @@ public class NotificationController implements Runnable {
         mainWindowController = controller;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void run() {
         while (true) {
@@ -41,6 +47,10 @@ public class NotificationController implements Runnable {
         }
     }
 
+    /**
+     * Shows window with notification for some task
+     * @param task task for which notification is shown
+     */
     private void notifyTask(Task task) {
         Platform.runLater(new Runnable() {
             @Override
