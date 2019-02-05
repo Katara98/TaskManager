@@ -2,7 +2,6 @@ package ua.edu.sumdu.j2se.volyk.tasks.views;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
@@ -108,6 +107,7 @@ public class MainWindowView extends View {
 
     /**
      * Sets the individual disabled state for all tasks toolbar buttons, "Save" and "Save as" menu items
+     *
      * @param disabled
      */
     public void setTaskAndSaveButtonsDisabled(boolean disabled) {
@@ -121,6 +121,7 @@ public class MainWindowView extends View {
 
     /**
      * Returns selected task in the list
+     *
      * @return selected task in the list
      */
     public Task getSelectedTask() {
@@ -129,6 +130,7 @@ public class MainWindowView extends View {
 
     /**
      * Returns index of the selected task in the list
+     *
      * @return index of the selected task in the list
      */
     public int getSelectedIndex() {
@@ -137,6 +139,7 @@ public class MainWindowView extends View {
 
     /**
      * Returns the text value of the "From" time field
+     *
      * @return the text value of the "From" time field
      */
     public String getFromDate() {
@@ -145,6 +148,7 @@ public class MainWindowView extends View {
 
     /**
      * Returns the text value of the "To" time field
+     *
      * @return the text value of the "To" time field
      */
     public String getToDate() {
@@ -153,6 +157,7 @@ public class MainWindowView extends View {
 
     /**
      * Sets the individual disabled state for the "Load from previous session" menu item
+     *
      * @param disabled the individual disabled state
      */
     public void setFromPrevSessionButtonDisabled(boolean disabled) {
@@ -161,6 +166,7 @@ public class MainWindowView extends View {
 
     /**
      * Sets task list items for the ListView
+     *
      * @param tasks task list items
      */
     public void setTaskListItems(ObservableList<Task> tasks) {
@@ -169,6 +175,7 @@ public class MainWindowView extends View {
 
     /**
      * Sets calendar items for CalendarTable
+     *
      * @param map calendar items
      */
     public void setCalendarItems(SortedMap<Date, Set<Task>> map) {

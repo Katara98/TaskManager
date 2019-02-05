@@ -15,8 +15,9 @@ public abstract class View {
 
     /**
      * Loads view from fxml file
+     *
      * @param stage stage where view will be shown
-     * @param file path to the fxml file
+     * @param file  path to the fxml file
      * @param title title of the window
      * @return view created from fxml file
      * @throws IOException if an I/O error occurs.

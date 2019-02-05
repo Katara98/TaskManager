@@ -2,7 +2,6 @@ package ua.edu.sumdu.j2se.volyk.tasks.views;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
@@ -10,6 +9,7 @@ import javafx.scene.layout.AnchorPane;
 import ua.edu.sumdu.j2se.volyk.tasks.controllers.MainWindowController;
 import ua.edu.sumdu.j2se.volyk.tasks.controllers.WindowType;
 import ua.edu.sumdu.j2se.volyk.tasks.models.Task;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -74,6 +74,7 @@ public class TaskWindowView extends View {
 
     /**
      * Returns the text value of the task title field
+     *
      * @return the text value of the task title field
      */
     public String getTaskTitle() {
@@ -82,6 +83,7 @@ public class TaskWindowView extends View {
 
     /**
      * Returns whether "Active" CheckBox is checked
+     *
      * @return whether "Active" CheckBox is checked
      */
     public boolean isActiveTask() {
@@ -90,6 +92,7 @@ public class TaskWindowView extends View {
 
     /**
      * Returns the text value of the start time field
+     *
      * @return the text value of the start time field
      */
     public String getStartTime() {
@@ -98,6 +101,7 @@ public class TaskWindowView extends View {
 
     /**
      * Returns the text value of the end time field
+     *
      * @return the text value of the end time field
      */
     public String getEndTime() {
@@ -106,6 +110,7 @@ public class TaskWindowView extends View {
 
     /**
      * Returns the text value of the repeated interval field
+     *
      * @return the text value of the repeated interval field
      */
     public String getRepeatInterval() {
@@ -114,6 +119,7 @@ public class TaskWindowView extends View {
 
     /**
      * Returns the text value of the selected task type
+     *
      * @return the text value of the selected task type
      */
     public String getTaskType() {
@@ -122,6 +128,7 @@ public class TaskWindowView extends View {
 
     /**
      * Returns whether the selected task type is repeatable
+     *
      * @return whether the selected task type is repeatable
      */
     public boolean isRepeatedTask() {
@@ -159,7 +166,7 @@ public class TaskWindowView extends View {
                 ObservableList<Node> list3 = FXCollections.concat(list, list2);
                 for (Node n : list3) {
                     if (n instanceof TextField) {
-                        ((TextField)n).setEditable(false);
+                        ((TextField) n).setEditable(false);
                         n.setFocusTraversable(false);
                     }
                     if (n instanceof CheckBox || n instanceof ComboBox) {

@@ -44,6 +44,7 @@ public class MainWindowController extends Application {
      * Creates new main controller with the view.
      * If there is no file from previous session "Load from previous session" menu item is set disabled.
      * If file where the path to the file from previous session is not found, new file is created
+     *
      * @param view
      */
     public MainWindowController(MainWindowView view) {
@@ -201,6 +202,7 @@ public class MainWindowController extends Application {
 
     /**
      * Shows task window and waits for user to close it
+     *
      * @param task task to be displayed in task window
      * @param type window type
      */
@@ -245,7 +247,7 @@ public class MainWindowController extends Application {
      * Loads task list from file that is chosen in FileChooser open dialog by user
      */
     public void loadListFromFile() {
-        if (list != null) {
+        if (list != null && !isSavedFile) {
             if (DialogWindow.showConfirmationWindow("Do you want to save changes before loading new list?", null)) {
                 saveList();
             }
@@ -398,6 +400,7 @@ public class MainWindowController extends Application {
 
     /**
      * Returns whether the entered data in TaskWindowView is valid
+     *
      * @return whether the entered data in TaskWindowView is valid
      */
     private boolean isValidData() {

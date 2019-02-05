@@ -12,10 +12,11 @@ public class DialogWindow {
     /**
      * Shows the dialog and waits for the user response (in other words, brings
      * up a blocking dialog, with the returned value the users input)
-     * @param title title for dialog window
+     *
+     * @param title  title for dialog window
      * @param header text to show in the dialog header area
-     * @param text text to show in the dialog content area
-     * @param type alert type of the dialog window
+     * @param text   text to show in the dialog content area
+     * @param type   alert type of the dialog window
      * @return value the users input
      */
     private static Optional<ButtonType> showDialogWindow(String title, String header, String text, Alert.AlertType type) {
@@ -28,8 +29,9 @@ public class DialogWindow {
 
     /**
      * Shows the warning dialog
+     *
      * @param header text to show in the dialog header area
-     * @param text text to show in the dialog content area
+     * @param text   text to show in the dialog content area
      */
     public static void showWarningWindow(String header, String text) {
         showDialogWindow("Warning!", header, text, Alert.AlertType.WARNING);
@@ -37,6 +39,7 @@ public class DialogWindow {
 
     /**
      * Shows the information dialog
+     *
      * @param text text to show in the dialog content area
      */
     public static void showInfoWindow(String text) {
@@ -45,6 +48,7 @@ public class DialogWindow {
 
     /**
      * Shows the error dialog
+     *
      * @param text text to show in the dialog content area
      */
     public static void showErrorWindow(String text) {
@@ -53,8 +57,9 @@ public class DialogWindow {
 
     /**
      * Shows the confirmation dialog and returns {@code true} if user pressed "OK" button, otherwise {@code false}
+     *
      * @param header text to show in the dialog header area
-     * @param text text to show in the dialog content area
+     * @param text   text to show in the dialog content area
      * @return {@code true}  if user pressed "OK" button
      */
     public static boolean showConfirmationWindow(String header, String text) {

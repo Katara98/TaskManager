@@ -10,15 +10,15 @@ import java.util.regex.Pattern;
 /**
  * Realizes methods for writing and reading task lists in different formats.
  * The format of the list of tasks in binary form:
- *  - Number of tasks
+ * - Number of tasks
  * Then for each task:
- *  - Length of the name
- *  - Name
- *  - Activity: 0/1
- *  - Repetition interval
+ * - Length of the name
+ * - Name
+ * - Activity: 0/1
+ * - Repetition interval
  * If repeating
- *  - The start time
- *  - The end time
+ * - The start time
+ * - The end time
  * If not repeated
  *  - The time of execution
  *
@@ -46,8 +46,9 @@ public class TaskIO {
 
     /**
      * Writes tasks from the list into a binary stream
+     *
      * @param tasks list of tasks to be written
-     * @param out output stream for list of tasks
+     * @param out   output stream for list of tasks
      * @throws IOException if an I/O error occurs.
      */
     public static void write(TaskList tasks, OutputStream out) throws IOException {
@@ -70,8 +71,9 @@ public class TaskIO {
 
     /**
      * Reads tasks from a binary stream in task list
+     *
      * @param tasks list of tasks to be read
-     * @param in input stream for list of tasks
+     * @param in    input stream for list of tasks
      * @throws IOException if an I/O error occurs.
      */
     public static void read(TaskList tasks, InputStream in) throws IOException {
@@ -102,8 +104,9 @@ public class TaskIO {
 
     /**
      * Writes tasks from a list to a binary file
+     *
      * @param tasks list of tasks to be written
-     * @param file output file
+     * @param file  output file
      * @throws IOException if an I/O error occurs.
      */
     public static void writeBinary(TaskList tasks, File file) throws IOException {
@@ -114,8 +117,9 @@ public class TaskIO {
 
     /**
      * Reads tasks from a binary file in task list
+     *
      * @param tasks list of tasks to be read
-     * @param file input file
+     * @param file  input file
      * @throws IOException if an I/O error occurs.
      */
     public static void readBinary(TaskList tasks, File file) throws IOException {
@@ -126,8 +130,9 @@ public class TaskIO {
 
     /**
      * Writes tasks from the list to the character stream
+     *
      * @param tasks list of tasks to be written
-     * @param out output character stream
+     * @param out   output character stream
      * @throws IOException if an I/O error occurs.
      */
     public static void write(TaskList tasks, Writer out) throws IOException {
@@ -146,9 +151,10 @@ public class TaskIO {
 
     /**
      * Reads tasks from a character stream in task list
+     *
      * @param tasks list of tasks to be read
-     * @param in input character stream
-     * @throws IOException if an I/O error occurs
+     * @param in    input character stream
+     * @throws IOException    if an I/O error occurs
      * @throws ParseException if date cannot be parsed
      */
     public static void read(TaskList tasks, Reader in) throws IOException, ParseException {
@@ -187,8 +193,9 @@ public class TaskIO {
 
     /**
      * Writes tasks from the list to the character file
+     *
      * @param tasks list of tasks to be written
-     * @param file output character file
+     * @param file  output character file
      * @throws IOException if an I/O error occurs
      */
     public static void writeText(TaskList tasks, File file) throws IOException {
@@ -199,9 +206,10 @@ public class TaskIO {
 
     /**
      * Reads tasks from a character file in task list
+     *
      * @param tasks list of tasks to be read
-     * @param file input character file
-     * @throws IOException if an I/O error occurs
+     * @param file  input character file
+     * @throws IOException    if an I/O error occurs
      * @throws ParseException if date cannot be parsed
      */
     public static void readText(TaskList tasks, File file) throws IOException, ParseException {
@@ -212,6 +220,7 @@ public class TaskIO {
 
     /**
      * Returns a String object representing a task
+     *
      * @param task task to be converted to a String
      * @return a String object representing a task
      */
@@ -233,6 +242,7 @@ public class TaskIO {
 
     /**
      * Returns a String object representing interval
+     *
      * @param intervalInSec interval to be converted to a String
      * @return a String object representing interval
      */
@@ -278,6 +288,7 @@ public class TaskIO {
 
     /**
      * Converts string value of interval to an int
+     *
      * @param s string value of interval
      * @return int value of interval
      */

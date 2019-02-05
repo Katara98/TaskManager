@@ -14,7 +14,7 @@ public class NotificationController implements Runnable {
     private MainWindowController mainWindowController;
     private long curTime = 0;
 
-    public  NotificationController(MainWindowController controller) {
+    public NotificationController(MainWindowController controller) {
         mainWindowController = controller;
     }
 
@@ -26,7 +26,7 @@ public class NotificationController implements Runnable {
         while (true) {
             List<Task> list = mainWindowController.getTasks();
             Date curDate = new Date();
-            long localCurTime = curDate.getTime()/1000;
+            long localCurTime = curDate.getTime() / 1000;
 
             if (localCurTime > curTime) {
                 synchronized (list) {
@@ -49,6 +49,7 @@ public class NotificationController implements Runnable {
 
     /**
      * Shows window with notification for some task
+     *
      * @param task task for which notification is shown
      */
     private void notifyTask(Task task) {

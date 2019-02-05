@@ -9,9 +9,10 @@ public class Tasks {
     /**
      * Returns tasks from the Iterable task collection, the notification time of which is
      * between {@code start} (exclusive) and {@code end} (inclusive).
+     *
      * @param tasks task collection for which it is needed to find incoming tasks
      * @param start start time of the interval in which it is needed to find tasks with notification
-     * @param end end time of the interval in which it is needed to find tasks with notification
+     * @param end   end time of the interval in which it is needed to find tasks with notification
      * @return array of tasks from the list in specified interval
      */
     public static Iterable<Task> incoming(Iterable<Task> tasks, Date start, Date end) {
@@ -22,7 +23,7 @@ public class Tasks {
             throw new IllegalArgumentException("Value of 'to' is less than value of 'from'.");
         } else {
             List<Task> incTasks = new ArrayList<>();
-            for (Task currentTask: tasks) {
+            for (Task currentTask : tasks) {
                 Date timeAfterStart = currentTask.nextTimeAfter(start);
                 if (timeAfterStart != null && timeAfterStart.after(start) && !timeAfterStart.after(end)) {
                     incTasks.add(currentTask);
@@ -36,15 +37,16 @@ public class Tasks {
      * Builds a calendar of tasks for a given period - a table where each date corresponds to the set of tasks
      * that must be performed at that time, at which one task can meet in accordance with several dates
      * if it has to be executed several times during the specified period.
+     *
      * @param tasks task collection for which it is needed to find incoming tasks
      * @param start start time of the interval in which it is needed to find tasks with notification
-     * @param end end time of the interval in which it is needed to find tasks with notification
+     * @param end   end time of the interval in which it is needed to find tasks with notification
      * @return a table where each date corresponds to the set of tasks that must be performed at that time
      */
     public static SortedMap<Date, Set<Task>> calendar(Iterable<Task> tasks, Date start, Date end) {
         Iterable<Task> incomingTasks = incoming(tasks, start, end);
         SortedMap<Date, Set<Task>> map = new TreeMap<>();
-        for(Task t : incomingTasks) {
+        for (Task t : incomingTasks) {
             addTaskToMap(map, t.nextTimeAfter(start), t);
         }
         return map;
@@ -52,9 +54,10 @@ public class Tasks {
 
     /**
      * Adds task to a map
-     * @param map where to add task
+     *
+     * @param map  where to add task
      * @param date key of the map for which it is needed to add a task
-     * @param t task to be added
+     * @param t    task to be added
      */
     private static void addTaskToMap(SortedMap<Date, Set<Task>> map, Date date, Task t) {
         Set<Task> taskSet = map.get(date);

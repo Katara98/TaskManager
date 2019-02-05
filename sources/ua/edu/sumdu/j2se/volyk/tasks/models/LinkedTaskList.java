@@ -7,43 +7,43 @@ import java.util.NoSuchElementException;
  * The LinkedTaskList class stores the linked task list.
  */
 public class LinkedTaskList extends TaskList {
-    private ListItem head;  
+    private ListItem head;
 
     /**
-	 * Constructs an empty LinkedTaskList.
-	 */
+     * Constructs an empty LinkedTaskList.
+     */
     public LinkedTaskList() {
     }
 
     private class ListItem implements Cloneable {
-        private Task task;  
+        private Task task;
         private ListItem next;
-    
+
         private ListItem(Task task) {
             this.task = task;
         }
-        
+
         private ListItem(Task task, ListItem next) {
             this.task = task;
             this.next = next;
         }
-    
+
         private Task getTask() {
             return task;
         }
-    
+
         private void setTask(Task task) {
             this.task = task;
         }
-    
+
         private ListItem getNext() {
             return next;
         }
-    
+
         private void setNext(ListItem item) {
             this.next = item;
         }
-        
+
         protected ListItem clone() {
             try {
                 ListItem clone = (ListItem) super.clone();
@@ -55,18 +55,18 @@ public class LinkedTaskList extends TaskList {
     }
 
     /**
-     * {@inheritDoc} 
+     * {@inheritDoc}
      */
     public boolean add(Task task) {
         if (task != null) {
-            if (head == null) { 
-                head = new ListItem(task); 
+            if (head == null) {
+                head = new ListItem(task);
                 size++;
                 return false;
-            } 
-			ListItem currentItem = head;
+            }
+            ListItem currentItem = head;
             while (currentItem.getNext() != null) {
-				currentItem = currentItem.getNext();
+                currentItem = currentItem.getNext();
             }
             currentItem.setNext(new ListItem(task));
             size++;
@@ -77,14 +77,14 @@ public class LinkedTaskList extends TaskList {
     }
 
     /**
-     * {@inheritDoc} 
+     * {@inheritDoc}
      */
     public boolean remove(Task task) {
         if (task != null) {
-            if (head == null) { 
+            if (head == null) {
                 System.out.println("List is empty!");
-                return false; 
-            } 
+                return false;
+            }
             ListItem currentItem = head;
             if (head.getTask().equals(task)) {
                 head = head.getNext();
@@ -103,14 +103,14 @@ public class LinkedTaskList extends TaskList {
                     return false;
                 }
             }
-            
+
         } else {
             throw new IllegalArgumentException("Can't remove null task.");
         }
     }
 
     /**
-     * {@inheritDoc} 
+     * {@inheritDoc}
      */
     public Task getTask(int index) {
         if (index >= 0 && index < size()) {
@@ -125,13 +125,13 @@ public class LinkedTaskList extends TaskList {
             throw new IndexOutOfBoundsException("Index out of range.");
         }
     }
-    
+
     protected TaskList createInstance() {
         return new LinkedTaskList();
     }
-    
+
     /**
-     * {@inheritDoc} 
+     * {@inheritDoc}
      */
     public Iterator<Task> iterator() {
         return new Iterator<Task>() {
@@ -166,9 +166,9 @@ public class LinkedTaskList extends TaskList {
             }
         };
     }
-    
+
     /**
-     * {@inheritDoc} 
+     * {@inheritDoc}
      */
     public LinkedTaskList clone() {
         LinkedTaskList clone = (LinkedTaskList) super.clone();

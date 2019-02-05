@@ -12,14 +12,14 @@ public class ArrayTaskList extends TaskList {
     private Task[] list;
 
     /**
-	 * Constructs an empty ArrayTaskList with an initial capacity.
-	 */
+     * Constructs an empty ArrayTaskList with an initial capacity.
+     */
     public ArrayTaskList() {
         list = new Task[INIT_SIZE];
     }
 
     /**
-     * {@inheritDoc} 
+     * {@inheritDoc}
      */
     public boolean add(Task task) {
         if (task != null) {
@@ -34,13 +34,13 @@ public class ArrayTaskList extends TaskList {
     }
 
     private void resize(int newSize) {
-        Task[] newList = new Task [newSize];
+        Task[] newList = new Task[newSize];
         System.arraycopy(list, 0, newList, 0, size);
         list = newList;
     }
 
     /**
-     * {@inheritDoc} 
+     * {@inheritDoc}
      */
     public boolean remove(Task task) {
         if (task != null) {
@@ -52,7 +52,7 @@ public class ArrayTaskList extends TaskList {
                         list[j] = list[j + 1];
                     }
                     list[--size] = null;
-					break;
+                    break;
                 }
             }
             if ((list.length > INIT_SIZE) && (size() < list.length / 4)) {
@@ -65,7 +65,7 @@ public class ArrayTaskList extends TaskList {
     }
 
     /**
-     * {@inheritDoc} 
+     * {@inheritDoc}
      */
     public Task getTask(int index) {
         if (index >= 0 && index < size()) {
@@ -74,14 +74,14 @@ public class ArrayTaskList extends TaskList {
             throw new IndexOutOfBoundsException("Index out of range.");
         }
     }
-    
+
     protected TaskList createInstance() {
         return new ArrayTaskList();
     }
-    
-        
+
+
     /**
-     * {@inheritDoc} 
+     * {@inheritDoc}
      */
     public Iterator<Task> iterator() {
         return new Iterator<Task>() {
@@ -112,9 +112,9 @@ public class ArrayTaskList extends TaskList {
 
         };
     }
-    
+
     /**
-     * {@inheritDoc} 
+     * {@inheritDoc}
      */
     public ArrayTaskList clone() {
         ArrayTaskList clone = (ArrayTaskList) super.clone();
