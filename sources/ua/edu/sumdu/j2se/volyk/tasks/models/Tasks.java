@@ -22,7 +22,6 @@ public class Tasks {
             throw new IllegalArgumentException("Value of 'to' is less than value of 'from'.");
         } else {
             List<Task> incTasks = new ArrayList<>();
-            //TaskList incomingTasks = createInstance();
             for (Task currentTask: tasks) {
                 Date timeAfterStart = currentTask.nextTimeAfter(start);
                 if (timeAfterStart != null && timeAfterStart.after(start) && !timeAfterStart.after(end)) {
@@ -46,22 +45,7 @@ public class Tasks {
         Iterable<Task> incomingTasks = incoming(tasks, start, end);
         SortedMap<Date, Set<Task>> map = new TreeMap<>();
         for(Task t : incomingTasks) {
-            if (t.isRepeated()) {
-                long d = t.nextTimeAfter(start).getTime();
-                long endD;
-                if (t.getEndTime().before(end)) {
-                    endD = t.getEndTime().getTime();
-                } else {
-                    endD = end.getTime();
-                }
-                for (; d <= endD; d += t.getRepeatInterval() * 60 * 1000) {
-                    Date curDate = new Date(d);
-                    addTaskToMap(map, curDate, t);
-                }
-            } else {
-                Date curDate = new Date(t.getTime().getTime());
-                addTaskToMap(map, curDate, t);
-            }
+            addTaskToMap(map, t.nextTimeAfter(start), t);
         }
         return map;
     }
